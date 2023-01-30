@@ -9,7 +9,7 @@ services:
       #   - http_proxy=http://webproxy.example.com
       #   - https_proxy=http://webproxy.example.com
     image: jupyter_docker
-    command: jupyter notebook --ip=0.0.0.0 --allow-root --no-browser --NotebookApp.password=sha1:58eaa2e688ae:11fd96685b9203d1256a1e09603c9be4f62c94b6
+    command: jupyter notebook --ip=0.0.0.0 --allow-root --no-browser --NotebookApp.password=sha256:622826ca63aa:0d26deb40a5477b7835b9fdfacc411913564e23e13e4eb5105dd00128fd2449f
     volumes:
       - ./jupyter/notebooks:/code
     ports:

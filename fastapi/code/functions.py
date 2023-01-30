@@ -26,19 +26,6 @@ def getdb(dbname, **kwargs):
     return db
 
 
-def createdoc(type, payload, **kwargs):
-    doc = payload.dict()
-    doc['date_created'] = now()
-    if kwargs.get('key', False):
-        k = kwargs['key']
-        mango = {'selector': {k: doc[k]}}
-        docs = [doc for doc in getdb(f'{type}_objects').find(mango)]
-        if len(docs) > 0:
-            return False, 422, f"{type.title()} already exists"
-    id = getdb(f'{type}_objects').save(doc)[0]
-    return True, 201, getdb(f'{type}_objects').get(id)
-
-
 def getdocs(type, expanded, **kwargs):
     filter = {k:v for (k,v) in kwargs.items() if v != None}
     if filter.get('query', False):
@@ -52,6 +39,19 @@ def getdocs(type, expanded, **kwargs):
         return [doc for doc in getdb(f'{type}_objects').find(mango)]
     return [doc.get('doc', doc['id']) for doc in getdb(f"{type}_objects").view('_all_docs', include_docs=expanded)]
 
+
+def createdoc(type, payload, **kwargs):
+    doc = payload.dict()
+    doc['date_created'] = now()
+    if kwargs.get('key', False):
+        k = kwargs['key']
+        mango = {'selector': {k: doc[k]}}
+        docs = [doc for doc in getdb(f'{type}_objects').find(mango)]
+        if len(docs) > 0:
+            return False, 422, f"{type.title()} already exists"
+    id = getdb(f'{type}_objects').save(doc)[0]
+    return True, 201, getdb(f'{type}_objects').get(id)
+    
 
 def getdocbyid(type, id, **kwargs):
     doc = getdb(f'{type}_objects').get(id)
