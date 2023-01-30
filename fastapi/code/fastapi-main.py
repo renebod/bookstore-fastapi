@@ -33,6 +33,15 @@ async def get_authors(expanded: bool = False,
     return getdocs('author', expanded, name=name, example=example, query=q)
         
 
+@app.post("/authors", status_code=201)
+async def create_author(payload: Author):
+    success, status_code, result = createdoc('author', payload, key='name')
+    if success:
+        return result
+    else:
+        raise HTTPException(status_code=status_code, detail=result) 
+
+
 @app.get("/authors/{id}", status_code=200)
 async def get_author_by_id(id: str):
     success, status_code, result = getdocbyid('author', id)
@@ -45,15 +54,6 @@ async def get_author_by_id(id: str):
 @app.put("/authors/{id}", status_code=200)
 async def update_author(id: str, payload: Author):
     success, status_code, result = updatedoc('author', id, payload)
-    if success:
-        return result
-    else:
-        raise HTTPException(status_code=status_code, detail=result) 
-
-
-@app.post("/authors", status_code=201)
-async def create_author(payload: Author):
-    success, status_code, result = createdoc('author', payload, key='name')
     if success:
         return result
     else:
