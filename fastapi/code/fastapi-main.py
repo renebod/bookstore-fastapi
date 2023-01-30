@@ -21,7 +21,7 @@ class Author(BaseModel):
 
 @app.get("/")
 async def read_root():
-    return RedirectResponse("/functionals", status_code=303)
+    return RedirectResponse("/authors", status_code=303)
 
 
 @app.get("/authors", status_code=200)
