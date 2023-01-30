@@ -9,7 +9,7 @@ def now():
 
 def getdb(dbname, **kwargs):
     user = "admin"
-    password = "mysecretpassword"
+    password = "secret123"
     dbhost =  "couchdb"
     couchserver = couchdb.Server(f"http://{user}:{password}@{dbhost}:5984/")
     if dbname in couchserver:
