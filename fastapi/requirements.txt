@@ -1,0 +1,5 @@
+fastapi
+uvicorn
+couchdb
+jinja2
+pytz
