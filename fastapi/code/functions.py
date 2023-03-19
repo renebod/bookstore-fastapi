@@ -68,6 +68,18 @@ def updatedoc(type, id, payload, **kwargs):
     doc.update(payload.dict())
     if doc == ref:
         return False, 422, f"{type.title()} no change detected"
+    names = [doc['doc']['name'] for doc in getdb(f"{type}_objects").view('_all_docs', include_docs=True)]
+    if doc['name'] in names:
+        return False, 422, f"{type.title()} name change error, name already exists"
     doc['date_updated'] = now()
     id = getdb(f'{type}_objects').save(doc)[0]
     return True, 200, getdb(f'{type}_objects').get(id)
+
+
+def updatedocs(type, filter, payload, **kwargs):
+    mango = {'selector': filter}
+    docs = [doc for doc in getdb(f'{type}_objects').find(mango)]
+    for doc in docs:
+        doc.update(payload)
+        doc['date_updated'] = now()
+        getdb(f'{type}_objects').save(doc)

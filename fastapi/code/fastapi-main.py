@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request, Body, Query, HTTPException
 from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 from typing import Dict
-from functions import getdocs, createdoc, getdocbyid, updatedoc
+from functions import getdocs, createdoc, getdocbyid, updatedoc, updatedocs
 from dbfill import dbfill
 
 
@@ -21,7 +21,7 @@ class Author(BaseModel):
 
 @app.get("/")
 async def read_root():
-    return RedirectResponse("/authors", status_code=303)
+    return RedirectResponse("/books", status_code=303)
 
 
 @app.get("/authors", status_code=200)
@@ -53,8 +53,18 @@ async def get_author_by_id(id: str):
 
 @app.put("/authors/{id}", status_code=200)
 async def update_author(id: str, payload: Author):
+    current = getdocbyid('author', id)[2]
     success, status_code, result = updatedoc('author', id, payload)
     if success:
+        updatedocs('book', {'author': current['name']}, {'author': payload.name})
         return result
     else:
-        raise HTTPException(status_code=status_code, detail=result) 
+        raise HTTPException(status_code=status_code, detail=result)
+
+
+@app.get("/books", status_code=200)
+async def get_books(expanded: bool = False,
+                    title: str = None,
+                    author: str = None,
+                    q: str | None = Query(default=None)):
+    return getdocs('book', expanded, title=title, author=author, query=q)
