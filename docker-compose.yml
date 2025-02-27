@@ -9,7 +9,7 @@ services:
     image: jupyter_docker
     command: jupyter notebook --ip=0.0.0.0 --allow-root --no-browser --NotebookApp.password=sha1:58eaa2e688ae:11fd96685b9203d1256a1e09603c9be4f62c94b6
     volumes:
-      - ./jupyter/notebooks:/code
+      - ./jupyter/notebooks:/src
     ports:
       - 8888:8888
     networks:
@@ -24,7 +24,7 @@ services:
     image: fastapi_docker
     command: uvicorn fastapi-main:app --host 0.0.0.0 --port 8000 --reload
     volumes:
-      - ./fastapi/code:/code
+      - ./fastapi/src:/src
     restart: always
     ports:
       - 8000:8000

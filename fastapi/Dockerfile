@@ -1,6 +1,6 @@
 FROM python:alpine3.17
 
-WORKDIR /code
+WORKDIR /src
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -13,4 +13,4 @@ RUN pip3 install -r requirements.txt
 
 COPY . .
 
-CMD ["uvicorn", "fastapi-main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "src.fastapi-main:app", "--host", "0.0.0.0", "--port", "8000"]
